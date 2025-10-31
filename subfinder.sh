@@ -68,7 +68,7 @@ cd "$SCAN_DIR" || exit 1
 
 OUTPUT_SUBDOMAINS="subdomains_${TARGET}.txt"
 LIVE_HOSTS="live_hosts.txt"
-UNCLEANED_AMASS=uncleaned_amass.txt
+UNCLEANED_AMASS="uncleaned_amass.txt"
 
 # Load tokens
 echo -e "${YELLOW}Loading tokens${NC}"

@@ -75,7 +75,7 @@ banner
 # ===== Setup =====
 
 # Create scan directory
-CLEAN_TARGET=$(echo "$TARGET" | sed 's|https\?://||')
+CLEAN_TARGET=$(echo "$TARGET" | sed "s|https\?://||")
 SCAN_DIR="scan_${CLEAN_TARGET}_$(date +%Y%m%d_%H%M%S)"
 
 mkdir -p "$SCAN_DIR"
@@ -127,7 +127,7 @@ fi
 
 # Check for common exposed strings
 echo -e "${YELLOW}Check for common exposed strings${NC}"
-cat "$OUTPUT_JS" | httpx -mc 200 -content-type | grep -E "application/javascript|text/javascript" | cut -d' ' -f1 | xargs -I% curl -s % | grep -I -iE "(password|secret|credentials|private_key|ssh\.key|api_key|apikey|access\.key|access key|consumer_key|client\.secret|token|refresh_token|access_token|session|jwt|authorization|bearer|oauth|firebase|aws|azure|gcp|stripe|slack|github|sendgrid|twilio|paypal|discord|mongodb|postgres|mysql|redis|database|\.env|\.git)" > "$EXPOSED_STRINGS"
+cat "$OUTPUT_JS" | httpx -mc 200 -content-type | grep -E "application/javascript|text/javascript" | cut -d' ' -f1 | xargs -I% curl -s % | grep -I -iE "(password|secret|credentials|private_key|ssh\.key|api_key|apikey|access\.key|access key|consumer_key|client\.secret|token|refresh_token|access_token|session|jwt|authorization|bearer|oauth|firebase|aws|azure|gcp|stripe|slack|github|sendgrid|twilio|paypal|discord|mongodb|postgres|mysql|redis|database|\.env|\.git)" >"$EXPOSED_STRINGS"
 echo -e "${GREEN}Check completed${NC}"
 
 # Check for links and vulnerable patterns using jsleak
