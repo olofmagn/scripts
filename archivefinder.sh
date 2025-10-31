@@ -87,7 +87,7 @@ curl -s -L \
 echo -e "${GREEN}Webarchive data fetch completed${NC}"
 
 echo -e "${YELLOW}Analysing data from the webarchive${NC}"
-cat "$WAYBACK_DATA" | uro | grep -Ei '\.(env|config|cfg|conf|cnf|properties|toml|yml|yaml|ini|ovpn|git|svn|key|pem|pub|asc|crt|p12|pfx|ppk|keystore|jks|secret|aws|s3cfg|sql|db|sqlite|sqlite3|mdb|accdb|dump|backup|bak|old|log|cache|json|xml|csv|txt|md|xls|xlsx|doc|docx|pdf|pptx|zip|tar|gz|tgz|bz2|xz|7z|rar|war|jar|apk|deb|rpm|iso|img|dmg|msi|bin|exe|dll|bat|sh|tmp|DS_Store)$' | anew "$WAYBACK_FINDINGS"
+cat "$WAYBACK_DATA" | uro | grep -Ei '\.(env|config|cfg|conf|cnf|properties|toml|yml|yaml|ini|ovpn|git|svn|key|pem|pub|asc|crt|p12|pfx|ppk|keystore|jks|secret|aws|s3cfg|sql|db|sqlite|sqlite3|mdb|accdb|dump|backup|bak|old|log|cache|json|xml|csv|txt|md|xls|xlsx|doc|docx|pdf|pptx|zip|tar|gz|tgz|bz2|xz|7z|rar|war|jar|apk|deb|rpm|iso|img|dmg|msi|bin|exe|dll|bat|sh|tmp|DS_Store)$' > "$WAYBACK_FINDINGS"
 echo -e "${GREEN}Webarchive data enumeration completed${NC}"
 
 # Run summary
