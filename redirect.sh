@@ -118,6 +118,7 @@ check_redirect() {
 		echo "$response" | grep -qiE "Location:.*$TEST_DOMAIN"; then
 		return 0
 	fi
+	echo -e "${CYAN} No result found ${NC}"
 	return 1
 }
 
@@ -207,7 +208,6 @@ else
 	TEST_URL=$(inject_payload "$TEST_DOMAIN")
 fi
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -223,7 +223,6 @@ else
 	TEST_URL=$(inject_payload "$TEST_DOMAIN.")
 fi
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -235,7 +234,6 @@ echo -e "${YELLOW}[Test 3] Protocol-relative URL${NC}"
 ((TOTAL_TEST++))
 TEST_URL=$(inject_payload "//$TEST_DOMAIN")
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -247,7 +245,6 @@ echo -e "${YELLOW}[Test 4] No protocol${NC}"
 ((TOTAL_TEST++))
 TEST_URL=$(inject_payload "$TEST_DOMAIN")
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -263,7 +260,6 @@ else
 	TEST_URL=$(inject_payload "$TEST_DOMAIN")
 fi
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -279,7 +275,6 @@ else
 	TEST_URL=$(inject_payload "\\\\\\\\$TEST_DOMAIN")
 fi
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -295,7 +290,6 @@ else
 	TEST_URL=$(inject_payload "google.com@$TEST_DOMAIN")
 fi
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -311,7 +305,6 @@ else
 	TEST_URL=$(inject_payload "///$TEST_DOMAIN")
 fi
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -327,7 +320,6 @@ else
 	TEST_URL=$(inject_payload "$TEST_DOMAIN")
 fi
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -343,7 +335,6 @@ else
 	TEST_URL=$(inject_payload "%20$TEST_DOMAIN")
 fi
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -355,7 +346,6 @@ echo -e "${YELLOW}[Test 11] Base64 encoding${NC}"
 ((TOTAL_TEST++))
 TEST_URL=$(inject_payload "$base64encoded_protocolanddomain")
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if check_redirect "$RESPONSE"; then
 	echo -e "${RED}🚨 302 REDIRECT to $TEST_DOMAIN${NC}"
 	((VULN_COUNT++))
@@ -371,11 +361,15 @@ else
 	TEST_URL=$(inject_payload "$TEST_DOMAIN")
 fi
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
-echo -e "${CYAN}$RESPONSE${NC}"
 if echo "$RESPONSE" | grep -qiE "window\.location|location\.href|document\.location"; then
 	echo -e "${RED}🚨 JavaScript REDIRECT detected${NC}"
+	echo ""
+	echo -e "${CYAN}${RESPONSE}${NC}"
 	((VULN_COUNT++))
+else
+	echo -e "${CYAN} No result found ${NC}"
 fi
+
 echo ""
 
 # Test 13: Parameter pollution
