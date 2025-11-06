@@ -21,7 +21,7 @@ Open Redirect Test Suite
 Usage: $0 -u URL_TEMPLATE -d DOMAIN [-s PROTOCOL]
 
 Required Options:
-  -u URL          Full URL with {{INJECT}} placeholder (e.g., "http://example.com/redir?url={{INJECT}}&foo=bar")
+  -u URL          Full URL with {{INJECT}} placeholder (e.g., 'http://example.com/redir?url={{INJECT}}&foo=bar')
   -d DOMAIN       Test domain for redirect (e.g., google.com)
 
 Optional:
@@ -122,10 +122,6 @@ check_redirect() {
 	return 1
 }
 
-if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
-	show_help
-fi
-
 # ===== Setup =====
 
 # Initialize flags
@@ -153,12 +149,12 @@ while getopts ":u:d:s:h" opt; do
 		;;
 	:)
 		echo -e "${RED}Error: Option -$OPTARG requires an argument${NC}" >&2
-		echo "Use -h or --help for usage information"
+		echo "Use -h for usage information"
 		exit $EXIT_FAILURE
 		;;
 	\?)
 		echo -e "${RED}Error: Invalid option: -$OPTARG${NC}" >&2
-		echo "Use -h or --help for usage information"
+		echo "Use -h for usage information"
 		exit $EXIT_FAILURE
 		;;
 	esac
@@ -173,7 +169,7 @@ MISSING_ARGS=()
 
 if [[ ${#MISSING_ARGS[@]} -gt 0 ]]; then
 	echo -e "${RED}Error: Missing required arguments: ${MISSING_ARGS[*]}${NC}"
-	echo "Use -h or --help for usage information"
+	echo "Use -h for usage information"
 	exit $EXIT_FAILURE
 fi
 
@@ -363,8 +359,9 @@ fi
 RESPONSE=$(curl -i -s --max-time 10 "$TEST_URL" 2>&1)
 if echo "$RESPONSE" | grep -qiE "window\.location|location\.href|document\.location"; then
 	echo -e "${RED}🚨 JavaScript REDIRECT detected${NC}"
-	echo ""
-	echo -e "${CYAN}${RESPONSE}${NC}"
+	echo -e "Matching code:${CYAN}"
+	echo "$RESPONSE" | grep -iE "window\.location|location\.href|document\.location"
+	echo -e "${NC}"
 	((VULN_COUNT++))
 else
 	echo -e "${CYAN} No result found ${NC}"
