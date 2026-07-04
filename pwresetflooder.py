@@ -183,7 +183,7 @@ def send_request(session: requests.Session, endpoint: str, email: str) -> Dict:
         return {"status": "error", "time": 0, "length": 0, "response": str(e)}
 
 
-def detect_signals(results: List[Dict]) -> Dict[str, bool]:
+def detect_signals(results: List[Dict]) -> Dict:
     """
     Centralized detection logic for rate-limit signals
 
@@ -191,7 +191,7 @@ def detect_signals(results: List[Dict]) -> Dict[str, bool]:
     - results (List[Dict]): List of result dictionaries from send_request
 
     Returns:
-    - Dict[str, bool]: Detected signals (e.g. hard_rl, soft_rl)
+    - Dict: Detected signals (e.g. hard_rl, soft_rl)
     """
 
     # Filter out errors
@@ -250,14 +250,16 @@ def analyze(results: List[Dict]) -> None:
         print(f"  - avg: {sum(times) / len(times):.3f}s")
 
     # Final summary
-    print_final_summary(results, times, signals)
+    print_final_summary(results, signals)
 
 
-def print_final_summary(
-    results: List[Dict], times: List[float], signals: Dict[str, bool]
-) -> None:
+def print_final_summary(results: List[Dict], signals: Dict) -> None:
     """
     Print final summary of test results
+
+    Args:
+    - results (List[Dict]): List of result dictionaries from send_request
+    - signals (Dict): Detected signals from analyze function
     """
 
     print(f"\n{GREEN}[*] Final Summary{NC}")
@@ -335,6 +337,8 @@ def print_result(i: int, res: Dict, show_len: bool = False, show_body: bool = Fa
     Args:
     - i (int): Request index
     - res (Dict): Result dictionary from send_request
+    - show_len (bool): Whether to show response length
+    - show_body (bool): Whether to show response body snippet
     """
 
     len_part = f" Len={res['length']}" if show_len else ""
