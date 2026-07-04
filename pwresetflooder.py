@@ -90,6 +90,12 @@ def parse_args():
         help="Show response length"
     )
 
+    parser.add_argument(
+        "--body",
+        action="store_true",
+        help="Include response body snippet in output"
+    )
+
     return parser.parse_args()
 
 
@@ -322,7 +328,7 @@ def print_config(args, custom_headers) -> None:
     print(f"{BLUE}[*] Requests: {args.count} | Delay: {args.delay}s{NC}\n")
 
 
-def print_result(i: int, res: Dict, show_len: bool = False) -> None:
+def print_result(i: int, res: Dict, show_len: bool = False, show_body: bool = False) -> None:
     """
     Print the result of a single request in a formatted manner
 
@@ -332,7 +338,21 @@ def print_result(i: int, res: Dict, show_len: bool = False) -> None:
     """
 
     len_part = f" Len={res['length']}" if show_len else ""
-    print(f"[{i + 1}] Status={res['status']} Time={res['time']}s{len_part}")
+    body_part = f" Body='{res['response']}'" if show_body else ""
+
+    status = res["status"]
+
+    match status:
+        case "error":
+            color = RED
+        case int() if status in RATE_LIMIT_CODES:
+            color = YELLOW
+        case int() if 200 <= status < 300:
+            color = GREEN
+        case _:
+            color = RED
+    
+    print(f"[{i + 1}] {color}Status={status}{NC} Time={res['time']}s{len_part}{body_part}")
 
 
 def main():
@@ -354,7 +374,7 @@ def main():
     for i in range(args.count):
         res = send_request(session, endpoint, args.email)
         results.append(res)
-        print_result(i, res, args.show_len)
+        print_result(i, res, args.show_len, args.body)
         time.sleep(args.delay)
 
     analyze(results)
