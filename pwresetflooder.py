@@ -258,16 +258,21 @@ def print_final_summary(
 
     # Calculate totals
     total = len(results)
-    errors = sum(1 for r in results if r["status"] == "error" or r["status"])
+    errors = sum(1 for r in results if r["status"] == "error")
+    success = sum(
+        1 for r in results
+        if isinstance(r["status"], int) and 200 <= r["status"] < 300
+    )
     rate_limited = sum(1 for r in results if r["status"] in RATE_LIMIT_CODES)
 
-    # Filter successful requests
-    success = total - errors
+    # Everything else that is not a rate-limit code
+    other = total - errors - success - rate_limited
 
     print(f"{BLUE}Total requests:{NC} {total}")
     print(f"{GREEN}Successful:{NC} {success}")
-    print(f"{RED}Errors:{NC} {errors}")
-    print(f"{YELLOW}Rate-limited responses:{NC} {rate_limited}")
+    print(f"{YELLOW}Rate-limited (429/403):{NC} {rate_limited}")
+    print(f"{RED}HTTP errors (4xx/5xx):{NC} {other}")
+    print(f"{RED}Connection errors:{NC}    {errors}")
 
     print(f"\n{GREEN}Detection signals:{NC}")
 
