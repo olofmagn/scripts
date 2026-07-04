@@ -31,7 +31,7 @@ BANNER = rf"""
  | .__/ \_/\_/ |_|  \___||___/\___|\__|_| |_|\___/ \___/ \__,_|\___|_|   
  |_|                                                                     
 
-                Password Recovery Rate-limit Tester v1.0
+                Password Recovery Rate-limit Tester v1.1
                             by olofmagn
 """
 
